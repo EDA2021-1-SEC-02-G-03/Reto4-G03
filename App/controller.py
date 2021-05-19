@@ -29,6 +29,9 @@ import csv
 El controlador se encarga de mediar entre la vista y el modelo.
 """
 
+def newAnalyzer():
+    model.newAnalyzer()
+
 # Inicialización del Catálogo de libros
 
 # Funciones para la carga de datos

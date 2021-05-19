@@ -36,8 +36,16 @@ operación solicitada
 
 def printMenu():
     print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("1- Inicializar el analizador")
+    print("2- Cargar información en el analizador")
+    print('3- Determinar si dos landing points están conectados')
+    print('4- Landing points que sirven como punto de interconexión')
+    print('5- Ruta mínima para enviar información entre dos países')
+    print('6- Identificar red de expansión mínima')
+    print('7- Países afectados con la caída de un landing point')
+    print('8- Ancho de banda máximo')
+    print('9- Ruta mínima entre dos direcciones IP')
+    print('10- Gráfica de resultados')
 
 catalog = None
 
@@ -48,9 +56,37 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
-        print("Cargando información de los archivos ....")
+        analyzer=controller.newAnalyzer()
 
     elif int(inputs[0]) == 2:
+        archivo_connections=cf.data_dir+'connections.csv'
+        archivo_countries=cf.data_dir+'countries.csv'
+        archivo_landing_points=cf.data_dir+'landing_points.csv'
+        
+        print("Cargando información de los archivos ...")
+    
+    elif int(inputs[0]) == 3:
+        pass
+
+    elif int(inputs[0]) == 4:
+        pass
+
+    elif int(inputs[0]) == 5:
+        pass
+
+    elif int(inputs[0]) == 6:
+        pass
+
+    elif int(inputs[0]) == 7:
+        pass
+
+    elif int(inputs[0]) == 8:
+        pass
+
+    elif int(inputs[0]) == 9:
+        pass
+
+    elif int(inputs[0]) == 10:
         pass
 
     else:
