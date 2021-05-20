@@ -29,10 +29,36 @@ import csv
 El controlador se encarga de mediar entre la vista y el modelo.
 """
 
-def newAnalyzer():
-    model.newAnalyzer()
+# def newAnalyzer():
+#     model.newAnalyzer()
+
+
 
 # Inicialización del Catálogo de libros
+
+def init():
+
+    analyzer = model.newAnalyzer()
+    return analyzer
+
+def loadConnections(analyzer, connections_file):
+
+    connections_file = cf.data_dir + connections_file
+    input_file = csv.DictReader(open(connections_file, encoding='utf-8-sig'), delimiter=',')
+    #lastLandPoint = None
+    for connection in input_file:
+        #if lastLandPoint is not None:
+            # samePointOrigin = lastLandPoint['origin'] == landPoint['origin']
+            # samePointDestination = lastLandPoint['destination'] == landPoint['destination']
+            # LandingPointId = lastLandPoint['']
+        model.addLandingPoint(analyzer, connection)
+    return analyzer
+
+def totalLandingPoints(analyzer):
+    return model.totalLandPoints(analyzer)
+
+def totalConnectionsLP(analyzer):
+    return model.totalConnectionsLP(analyzer)
 
 # Funciones para la carga de datos
 

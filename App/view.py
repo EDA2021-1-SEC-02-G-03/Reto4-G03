@@ -35,17 +35,39 @@ operación solicitada
 """
 
 def printMenu():
+    # print("Bienvenido")
+    # print("1- Inicializar el analizador")
+    # print("2- Cargar información en el analizador")
+    # print('3- Determinar si dos landing points están conectados')
+    # print('4- Landing points que sirven como punto de interconexión')
+    # print('5- Ruta mínima para enviar información entre dos países')
+    # print('6- Identificar red de expansión mínima')
+    # print('7- Países afectados con la caída de un landing point')
+    # print('8- Ancho de banda máximo')
+    # print('9- Ruta mínima entre dos direcciones IP')
+    # print('10- Gráfica de resultados')
+
     print("Bienvenido")
-    print("1- Inicializar el analizador")
-    print("2- Cargar información en el analizador")
-    print('3- Determinar si dos landing points están conectados')
-    print('4- Landing points que sirven como punto de interconexión')
-    print('5- Ruta mínima para enviar información entre dos países')
-    print('6- Identificar red de expansión mínima')
-    print('7- Países afectados con la caída de un landing point')
-    print('8- Ancho de banda máximo')
-    print('9- Ruta mínima entre dos direcciones IP')
-    print('10- Gráfica de resultados')
+    print("1- Inicializar el Analyzer")
+    print("====================================================================")
+    print("2- Cargar información en el Analyzer")
+    print("====================================================================")
+    print("3- Cantidad de clústers dentro de la red de cables submarinos") #REQUERIMIENTO-1
+    print("====================================================================")
+    print("4- Los landing points que sirven como ppunto de interconexión\n   a más cables en la red") #REQUERIMIENTO-2
+    print("====================================================================")
+    print("5- Ruta mínima en distancia para enviar inforamción entre dos países") #REQUERIMIENTO-3
+    print("====================================================================")
+    print("6- Identificar la infraestructura crítica para poder pgarantiar\n   el mantenimiento preventivo del mismo") #REQUERIMIENTO-4
+    print("====================================================================")
+    print("7- Impacto que podria tener el fallo de un determinado landing\n   point que afecta a todos los cables conectados al mismo") #REQUERIMIENTO-5
+    print("====================================================================")
+    print("8- Ancho de banda máximo que se puede garantizar para la transmisión\n   a un servidor ubicado en el país") #REQUERIMIENTO-6
+    print("====================================================================")
+    print("9- Ruta mínima en número de saltos para enviar inforamción entre dos\n   direcciones IP dadas") #REQUERIMIENTO-7
+    print("====================================================================")
+    print("10- Graficar resultados") #REQUERIMIENTO-8
+    print("====================================================================")
 
 catalog = None
 
@@ -56,14 +78,19 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
-        analyzer=controller.newAnalyzer()
+        cont = controller.init()
 
     elif int(inputs[0]) == 2:
-        archivo_connections=cf.data_dir+'connections.csv'
-        archivo_countries=cf.data_dir+'countries.csv'
-        archivo_landing_points=cf.data_dir+'landing_points.csv'
+        file_connections='connections.csv'
+        file_countries=cf.data_dir+'countries.csv'
+        file_landing_points=cf.data_dir+'landing_points.csv'
         
         print("Cargando información de los archivos ...")
+        controller.loadConnections(cont, file_connections)
+        total_landingPoints = controller.totalLandingPoints(cont)
+        total_ConnectionsLP = controller.totalConnectionsLP(cont)
+        print('total de Landing Points: '+str(total_landingPoints))
+        print('total de conexiones entre Landing Points: '+str(total_ConnectionsLP))
     
     elif int(inputs[0]) == 3:
         pass
