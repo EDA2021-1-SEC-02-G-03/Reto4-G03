@@ -49,6 +49,9 @@ def newAnalyzer():
         analyzer['LandPoints_Vertex'] = mp.newMap(numelements=20000,
                                            maptype='PROBING'
                                            )
+        analyzer['landing_points_data'] = lt.newList('ARRAY_LIST')
+        
+        analyzer['countries'] = lt.newList('ARRAY_LIST')
 
         analyzer['connections'] = gr.newGraph(datastructure='ADJ_LIST',
                                               directed=False,
@@ -74,6 +77,12 @@ def addLandingPoint(analyzer, connections):
         return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:addLandConnection')
+
+def addCountry(analyzer, country):
+    lt.addLast(analyzer['countries'], country)
+
+def addLandingPoint_data(analyzer, LandingPoint):
+    lt.addLast(analyzer['landing_points_data'], LandingPoint)
 
 # def addLandPointVertex(analyzer, LandPoint):
 #     entry = mp.get(analyzer['LandPoints_Vertex'], LandPoint)
@@ -105,6 +114,17 @@ def totalLandPoints(analyzer):
 def totalConnectionsLP(analyzer):
     return gr.numEdges(analyzer['connections'])
 
+def total_countries(analyzer):
+    return lt.size(analyzer['countries'])
+
+def last_country_info(analyzer):
+    info = lt.getElement(analyzer['countries'], lt.size(analyzer['countries']))
+    return info['country_name'], info['population_number'], info['internet_users']
+
+def first_landingP(analyzer):
+    info = lt.getElement(analyzer['landing_points_data'], 1)
+    return info['landing_point_id'], info['name'], info['latitude'], info['longitude']
+    #print(info)
 # Construccion de modelos
 #print(convert_distance('31,000 km'))
 

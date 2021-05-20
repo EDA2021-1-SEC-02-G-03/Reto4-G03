@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+#from App.model import total_countries
 import config as cf
 import sys
 import controller
@@ -82,16 +83,38 @@ while True:
 
     elif int(inputs[0]) == 2:
         file_connections='connections.csv'
-        file_countries=cf.data_dir+'countries.csv'
-        file_landing_points=cf.data_dir+'landing_points.csv'
+        file_countries='countries.csv'
+        file_landing_points='landing_points.csv'
         
         print("Cargando información de los archivos ...")
+        print('')
         controller.loadConnections(cont, file_connections)
+        controller.loadCountries(cont, file_countries)
+        controller.loadLandingPoints(cont, file_landing_points)
+        last_country = controller.last_country_info(cont)
         total_landingPoints = controller.totalLandingPoints(cont)
         total_ConnectionsLP = controller.totalConnectionsLP(cont)
+        first_landing_point = controller.first_landingP(cont)
+        #controller.first_landingP(cont)
+        total_countries = controller.totalCountries(cont)
+        print('-------------------------------')
         print('total de Landing Points: '+str(total_landingPoints))
+        print('-------------------------------')
         print('total de conexiones entre Landing Points: '+str(total_ConnectionsLP))
-    
+        print('-------------------------------')
+        print('El total de paises es: ' + str(total_countries))
+        print('-------------------------------')
+        print('Primer Landing Point Cargado')
+        #print('-------------------------------')
+        print('Landing Point id: '+first_landing_point[0]+'| nombre: '+first_landing_point[1]
+        +'| latitud: '+first_landing_point[2]+'| longitud: '+first_landing_point[3])
+        print('-------------------------------')
+        print('Ultimo País Cargado')
+        #print('-------------------------------')
+        print('País: '+last_country[0]+'| Población: '+last_country[1]+ ' | Número de usuarios: '+last_country[2])
+        print('-------------------------------')
+        print('')
+
     elif int(inputs[0]) == 3:
         pass
 

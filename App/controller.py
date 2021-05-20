@@ -54,11 +54,35 @@ def loadConnections(analyzer, connections_file):
         model.addLandingPoint(analyzer, connection)
     return analyzer
 
+def loadCountries(analyzer, countries_file):
+    countries_file = cf.data_dir + countries_file
+    input_file = csv.DictReader(open(countries_file, encoding='utf-8-sig'), delimiter=',')
+    for country in input_file:
+        model.addCountry(analyzer, country)
+    return analyzer
+
+def loadLandingPoints(analyzer, landingPoints_file):
+    landingPoints_file = cf.data_dir + landingPoints_file
+    input_file = csv.DictReader(open(landingPoints_file, encoding='utf-8-sig'), delimiter=',')
+    for landingP in input_file:
+        model.addLandingPoint_data(analyzer, landingP)
+    return analyzer
+
+
 def totalLandingPoints(analyzer):
     return model.totalLandPoints(analyzer)
 
 def totalConnectionsLP(analyzer):
     return model.totalConnectionsLP(analyzer)
+
+def totalCountries(analyzer):
+    return model.total_countries(analyzer)
+
+def last_country_info(analyzer):
+    return model.last_country_info(analyzer)
+
+def first_landingP(analyzer):
+    return model.first_landingP(analyzer)
 
 # Funciones para la carga de datos
 
