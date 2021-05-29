@@ -119,7 +119,7 @@ def total_countries(analyzer):
 
 def last_country_info(analyzer):
     info = lt.getElement(analyzer['countries'], lt.size(analyzer['countries']))
-    return info['country_name'], info['population_number'], info['internet_users']
+    return info['CountryName'], info['Population'], info['Internet users']
 
 def first_landingP(analyzer):
     info = lt.getElement(analyzer['landing_points_data'], 1)
