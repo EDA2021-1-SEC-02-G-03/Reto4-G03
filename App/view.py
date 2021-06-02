@@ -20,12 +20,13 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
-#from App.model import total_countries
+
 import config as cf
 import sys
 import controller
 from DISClib.ADT import list as lt
 assert cf
+from DISClib.ADT import graph as gp
 
 
 """
@@ -36,17 +37,6 @@ operación solicitada
 """
 
 def printMenu():
-    # print("Bienvenido")
-    # print("1- Inicializar el analizador")
-    # print("2- Cargar información en el analizador")
-    # print('3- Determinar si dos landing points están conectados')
-    # print('4- Landing points que sirven como punto de interconexión')
-    # print('5- Ruta mínima para enviar información entre dos países')
-    # print('6- Identificar red de expansión mínima')
-    # print('7- Países afectados con la caída de un landing point')
-    # print('8- Ancho de banda máximo')
-    # print('9- Ruta mínima entre dos direcciones IP')
-    # print('10- Gráfica de resultados')
 
     print("Bienvenido")
     print("1- Inicializar el Analyzer")
@@ -114,6 +104,7 @@ while True:
         print('País: '+last_country[0]+'| Población: '+last_country[1]+ ' | Número de usuarios: '+last_country[2])
         print('-------------------------------')
         print('')
+   
 
     elif int(inputs[0]) == 3:
         pass
