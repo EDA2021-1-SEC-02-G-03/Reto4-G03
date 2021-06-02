@@ -66,8 +66,8 @@ def newAnalyzer():
 def addLandingPoint(analyzer, connections):
     
     try:
-        origin = connections['origin']
-        destination = connections['destination']
+        origin = connections['origin']+'_'+connections['cable_id']
+        destination = connections['destination']+'_'+connections['cable_id']
         distance = convert_distance(connections['cable_length'])
         addLandPoint(analyzer, origin)
         addLandPoint(analyzer, destination)
