@@ -65,22 +65,22 @@ def loadCountries(analyzer, countries_file):
 #TESTING#
 #########
 
-def Manual_testing(countries_file):
-    checker = {}
-    countries_file = cf.data_dir + countries_file
-    input_file = csv.DictReader(open(countries_file, encoding='utf-8-sig'), delimiter=',')
-    for landing_point in input_file:
-        data = landing_point['name'].split(',')[0]
-        print(data)
-        try:
-            checker[data] = 1
-        except:
-            checker[data] = 0
+# def Manual_testing(countries_file):
+#     checker = {}
+#     countries_file = cf.data_dir + countries_file
+#     input_file = csv.DictReader(open(countries_file, encoding='utf-8-sig'), delimiter=',')
+#     for landing_point in input_file:
+#         data = landing_point['name'].split(',')[0]
+#         print(data)
+#         try:
+#             checker[data] = 1
+#         except:
+#             checker[data] = 0
 
-    print(len(checker))
+#     print(len(checker))
         
     
-Manual_testing('landing_points.csv')
+#Manual_testing('landing_points.csv')
 
 def loadLandingPoints(analyzer, landingPoints_file):
     landingPoints_file = cf.data_dir + landingPoints_file
@@ -104,6 +104,15 @@ def last_country_info(analyzer):
 
 def first_landingP(analyzer):
     return model.first_landingP(analyzer)
+
+def connectedComponents(analyzer):
+    return model.find_connectedComponents(analyzer)
+
+def paths_landingPoint1(analyzer, origin_landingP):
+    return model.paths_landingPoint1(analyzer, origin_landingP)
+
+def exist_path_landingPoint2(analyzer, dest_landingP):
+    return model.exist_path_landingPoint2(analyzer, dest_landingP)
 
 # Funciones para la carga de datos
 

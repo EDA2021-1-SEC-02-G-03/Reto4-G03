@@ -31,6 +31,8 @@ from DISClib.ADT import map as mp
 from DISClib.ADT.graph import gr
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Graphs import scc
+from DISClib.Algorithms.Graphs import dijsktra as djk 
 from DISClib.Utils import error as error
 assert cf
 
@@ -43,7 +45,8 @@ def newAnalyzer():
         analyzer = {
                     'connections':None,
                     'landing points':None,
-                    'countries':None
+                    'countries':None,
+                    'clusters':None
                     }
 
         analyzer['LandPoints_Vertex'] = mp.newMap(numelements=20000,
@@ -54,7 +57,7 @@ def newAnalyzer():
         analyzer['countries'] = lt.newList('ARRAY_LIST')
 
         analyzer['connections'] = gr.newGraph(datastructure='ADJ_LIST',
-                                              directed=False,
+                                              directed=True,
                                               size = 20000,
                                               comparefunction=compareLandingPoints
                                               )
@@ -124,6 +127,21 @@ def last_country_info(analyzer):
 def first_landingP(analyzer):
     info = lt.getElement(analyzer['landing_points_data'], 1)
     return info['landing_point_id'], info['name'], info['latitude'], info['longitude']
+
+def find_connectedComponents(analyzer):
+
+    analyzer['connections'] = scc.KosarajuSCC(analyzer['connections'])
+    return scc.connectedComponents(analyzer['connections'])
+
+def paths_landingPoint1(analyzer, origin_landingP):
+    analyzer['clusters'] = djk.Dijkstra(analyzer['connections'], origin_landingP)
+    return analyzer
+
+def exist_path_landingPoint2(analyzer, dest_landingP):
+    return djk.hasPathTo(analyzer['connections'], dest_landingP)
+
+#def find_con
+
     #print(info)
 # Construccion de modelos
 #print(convert_distance('31,000 km'))

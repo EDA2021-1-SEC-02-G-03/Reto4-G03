@@ -107,7 +107,20 @@ while True:
    
 
     elif int(inputs[0]) == 3:
-        pass
+
+        landing_point1 = input('Ingrese el nombre del landing point 1')
+        landing_point2 = input('Ingrese el nombre del landing point 2')
+
+
+
+        total = controller.connectedComponents(cont)
+        controller.paths_landingPoint1(cont, landing_point1)
+        exists = controller.exist_path_landingPoint2(cont, landing_point2)
+
+
+        print('Número total de cluster presentes en la red: ' + str(total))
+        print('Existe camino :/')
+        print(exists)
 
     elif int(inputs[0]) == 4:
         pass
