@@ -113,9 +113,9 @@ while True:
         # para cada uno de ellos.
 
 
-        '''
-        landing_point1 = input('Ingrese el nombre del landing point 1')
-        landing_point2 = input('Ingrese el nombre del landing point 2')
+        
+        landing_point1 = input('Ingrese el nombre del landing point 1: ')
+        landing_point2 = input('Ingrese el nombre del landing point 2: ')
 
 
 
@@ -127,15 +127,15 @@ while True:
         print('Número total de cluster presentes en la red: ' + str(total))
         print('Existe camino :/')
         print(exists)
-        '''
         
+        '''
         encadenada=mp.valueSet(cont['id_name+id_hash'])
         for i in lt.iterator(encadenada):
             for t in lt.iterator(i):
                 print(t)
             break
         print(mp.isEmpty(cont['id_name+id_hash']))
-
+        '''
 
     elif int(inputs[0]) == 4:
         pass

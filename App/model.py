@@ -131,7 +131,15 @@ def find_connectedComponents(analyzer):
     return scc.connectedComponents(analyzer['connections'])
 
 def paths_landingPoint1(analyzer, origin_landingP):
-    analyzer['clusters'] = djk.Dijkstra(analyzer['connections'], origin_landingP)
+    #Llamar a la funcion paths landing point 1 con todos los vertices de dicho landing point
+    analyzer['clusters']=[]
+    entry=mp.get(analyzer['landing_name_id_hash'],origin_landingP)
+    origin_id=me.getValue(entry)
+    entry=mp.get(analyzer['id_name+id_hash'],origin_id)
+    lista=me.getValue(entry)
+    for origin in lt.iterator(lista):
+        print(origin)
+        analyzer['clusters'].append(djk.Dijkstra(analyzer['connections'], origin))
     return analyzer
 
 def exist_path_landingPoint2(analyzer, dest_landingP):

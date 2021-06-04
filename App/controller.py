@@ -110,6 +110,7 @@ def connectedComponents(analyzer):
     return model.find_connectedComponents(analyzer)
 
 def paths_landingPoint1(analyzer, origin_landingP):
+    
     return model.paths_landingPoint1(analyzer, origin_landingP)
 
 def exist_path_landingPoint2(analyzer, dest_landingP):
