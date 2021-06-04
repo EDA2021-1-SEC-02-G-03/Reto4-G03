@@ -27,7 +27,8 @@ import controller
 from DISClib.ADT import list as lt
 assert cf
 from DISClib.ADT import graph as gp
-
+from DISClib.ADT import list as lt
+from DISClib.ADT import map as mp
 
 """
 La vista se encarga de la interacción con el usuario
@@ -107,7 +108,12 @@ while True:
    
 
     elif int(inputs[0]) == 3:
+        #TODO: Hay que hacerle algo a los landing points para que se revisen todos los landing points con la string de id.
+        #Idea: crear un mapa que relacione landing point sin id con todos los landing points con ids y realizar el algoritmo
+        # para cada uno de ellos.
 
+
+        '''
         landing_point1 = input('Ingrese el nombre del landing point 1')
         landing_point2 = input('Ingrese el nombre del landing point 2')
 
@@ -121,6 +127,15 @@ while True:
         print('Número total de cluster presentes en la red: ' + str(total))
         print('Existe camino :/')
         print(exists)
+        '''
+        
+        encadenada=mp.valueSet(cont['id_name+id_hash'])
+        for i in lt.iterator(encadenada):
+            for t in lt.iterator(i):
+                print(t)
+            break
+        print(mp.isEmpty(cont['id_name+id_hash']))
+
 
     elif int(inputs[0]) == 4:
         pass

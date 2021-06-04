@@ -87,6 +87,7 @@ def loadLandingPoints(analyzer, landingPoints_file):
     input_file = csv.DictReader(open(landingPoints_file, encoding='utf-8-sig'), delimiter=',')
     for landingP in input_file:
         model.addLandingPoint_data(analyzer, landingP)
+        model.landing_points_hash_table(analyzer, landingP)
     return analyzer
 
 

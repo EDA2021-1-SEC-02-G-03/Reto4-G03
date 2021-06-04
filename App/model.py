@@ -40,31 +40,7 @@ assert cf
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
 los mismos.
 """
-def newAnalyzer():
-    try:
-        analyzer = {
-                    'connections':None,
-                    'landing points':None,
-                    'countries':None,
-                    'clusters':None
-                    }
 
-        analyzer['LandPoints_Vertex'] = mp.newMap(numelements=20000,
-                                           maptype='PROBING'
-                                           )
-        analyzer['landing_points_data'] = lt.newList('ARRAY_LIST')
-        
-        analyzer['countries'] = lt.newList('ARRAY_LIST')
-
-        analyzer['connections'] = gr.newGraph(datastructure='ADJ_LIST',
-                                              directed=True,
-                                              size = 20000,
-                                              comparefunction=compareLandingPoints
-                                              )
-
-        return analyzer
-    except Exception as exp:
-        error.reraise(exp, 'model:newAnalyzer')
 
 def addLandingPoint(analyzer, connections):
     
@@ -75,8 +51,29 @@ def addLandingPoint(analyzer, connections):
         addLandPoint(analyzer, origin)
         addLandPoint(analyzer, destination)
         addConnection(analyzer, origin, destination, distance)
-        # addLandPointVertex(analyzer, origin)
-        # addLandPointVertex(analyzer, destination)
+        if not mp.contains(analyzer['id_name+id_hash'],connections['origin']):
+            lista=lt.newList('ARRAY_LIST')
+            lt.addLast(lista, origin)
+            mp.put(analyzer['id_name+id_hash'],connections['origin'],lista)
+        else:
+            entry=mp.get(analyzer['id_name+id_hash'],connections['origin'])
+            lista=me.getValue(entry)
+            if not lt.isPresent(lista,origin):
+                lt.addLast(lista,origin)
+                mp.put(analyzer['id_name+id_hash'],connections['origin'],lista)
+
+        if not mp.contains(analyzer['id_name+id_hash'],connections['destination']):
+            lista=lt.newList('ARRAY_LIST')
+            lt.addLast(lista, destination)
+            mp.put(analyzer['id_name+id_hash'],connections['destination'],lista)
+        else:
+            entry=mp.get(analyzer['id_name+id_hash'],connections['destination'])
+            lista=me.getValue(entry)
+            if not lt.isPresent(lista,destination):
+                lt.addLast(lista,destination)
+                mp.put(analyzer['id_name+id_hash'],connections['destination'],lista)
+
+
         return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:addLandConnection')
@@ -164,3 +161,46 @@ def compareLandingPoints(value, keyValue):
         return -1
 
 # Funciones de ordenamiento
+
+
+#Funciones Creadas por Juan Andrés
+def newAnalyzer():
+    try:
+        analyzer = {
+                    'connections':None,
+                    'landing points':None,
+                    'countries':None,
+                    'clusters':None
+                    }
+        
+
+        analyzer['landing_name_id_hash']=mp.newMap(numelements=20000,maptype='PROBING')
+        analyzer['id_name+id_hash']=mp.newMap(numelements=20000,maptype='PROBING')
+        #TODO: Este mapa de 'LandPoints_Vertex' esta vacio
+        analyzer['LandPoints_Vertex'] = mp.newMap(numelements=20000,
+                                           maptype='PROBING'
+                                           )
+        analyzer['landing_points_data'] = lt.newList('ARRAY_LIST')
+        
+        analyzer['countries'] = lt.newList('ARRAY_LIST')
+
+        analyzer['connections'] = gr.newGraph(datastructure='ADJ_LIST',
+                                              directed=True,
+                                              size = 20000,
+                                              comparefunction=compareLandingPoints
+                                              )
+        #Los vértices del grafo connections son landing point id + _ + cable id
+        #TODO: Crear mapa que relacione landing point name con todos los posibles vertices de dicho landing point para el grafo.
+
+        return analyzer
+    except Exception as exp:
+        error.reraise(exp, 'model:newAnalyzer')
+
+def landing_points_hash_table(analyzer,landing_point):
+    name=landing_point['name']
+    land_id=landing_point['landing_point_id']
+    if not mp.contains(analyzer['landing_name_id_hash'],name):
+        mp.put(analyzer['landing_name_id_hash'],name,land_id)
+    
+
+
