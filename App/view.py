@@ -27,7 +27,8 @@ import controller
 from DISClib.ADT import list as lt
 assert cf
 from DISClib.ADT import graph as gp
-
+import time
+import tracemalloc
 
 """
 La vista se encarga de la interacción con el usuario
@@ -78,6 +79,14 @@ while True:
         
         print("Cargando información de los archivos ...")
         print('')
+
+        delta_time = -1.0
+        delta_memory = -1.0
+
+        tracemalloc.start()
+        start_time = controller.getTime()
+        start_memory = controller.getMemory()
+
         controller.loadConnections(cont, file_connections)
         controller.loadCountries(cont, file_countries)
         controller.loadLandingPoints(cont, file_landing_points)
@@ -87,6 +96,15 @@ while True:
         first_landing_point = controller.first_landingP(cont)
         #controller.first_landingP(cont)
         total_countries = controller.totalCountries(cont)
+
+        stop_memory = controller.getMemory()
+        stop_time = controller.getTime()
+        tracemalloc.stop()
+
+        delta_time = stop_time - start_time
+        delta_memory = controller.deltaMemory(start_memory, stop_memory)
+        print('Tiempo[ms]: ', f"{delta_time:.3f}", "-", "Memoria [kB]: ", f"{delta_memory:.3f}")
+
         print('-------------------------------')
         print('total de Landing Points: '+str(total_landingPoints))
         print('-------------------------------')
