@@ -147,9 +147,27 @@ while True:
         pass
 
     elif int(inputs[0]) == 5:
+        
+        paisA=input('Ingrese el país A: ')
+        paisB=input('Ingrese el país B: ')
+        resultado=controller.req3(cont,paisA,paisB)
+        if resultado is None:
+            print('No se encontró camino entre los dos países ingresados.')
+        else:
+            print(resultado)
+
+        '''
+        keys=mp.keySet(cont['country-landing_points'])
+        for i in lt.iterator(keys):
+            print(i)
+        '''
+        
         pass
 
     elif int(inputs[0]) == 6:
+        #Árbol de Recubrimiento de Costo Mínimo
+
+        
         pass
 
     elif int(inputs[0]) == 7:

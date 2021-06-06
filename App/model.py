@@ -34,6 +34,7 @@ from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk 
 from DISClib.Utils import error as error
+from DISClib.ADT import stack as stk
 assert cf
 
 """
@@ -119,7 +120,11 @@ def addLandPoint(analyzer, LandPoint):
         error.reraise(exp, 'model:addLandPoint')
 
 def convert_distance(cable_length):
-   return cable_length.replace(',', '').split(' ')[0]
+   dato=cable_length.replace(',', '').split(' ')[0]
+   if dato=='n.a.':
+       return 0
+   else:
+       return float(dato)
 
 def totalLandPoints(analyzer):
     return gr.numVertices(analyzer['connections'])
@@ -170,7 +175,88 @@ def req2(analyzer,key):
         entry1=mp.get(analyzer['name_landing_id_hash'],key)
         lt.addFirst(lista,numero)
         return me.getValue(entry1)+'. ID: '+key+'. Total de cables conectados: '+str(numero)
+
+def req3(analyzer,paisA,paisB):
+
+    '''
+    capitalA=country_to_capital(analyzer,paisA)
+    capitalB=country_to_capital(analyzer,paisB)
+    #No todas las capitales tienen landing points. Bogota, por ejemplo, no tiene.
+    print(capitalA)
+    nameA=capitalA+', '+paisA
+    nameB=capitalB+', '+paisB
+    idA=cityname_to_id(analyzer,nameA)
+    idB=cityname_to_id(analyzer,nameB)
+    verticesA=get_list_of_vertices(analyzer,idA)
+    verticesB=get_list_of_vertices(analyzer,idB)
+    '''
+
+    menor_distancia=-150
+    menor_origin=''
+    menor_destination=''
+
+    landingpointsA=get_landing_points_by_country(analyzer,paisA)
+    landingpointsB=get_landing_points_by_country(analyzer,paisB)
+    
+
+    for landingpointA in lt.iterator(landingpointsA):
+        #print('landingpointA:',landingpointA)
+        verticesA=get_list_of_vertices(analyzer,landingpointA)
+        for landingpointB in lt.iterator(landingpointsB):
+            #print('landingpointB:',landingpointB)
+            verticesB=get_list_of_vertices(analyzer,landingpointB)
+            for origin in lt.iterator(verticesA):
+                busqueda=djk.Dijkstra(analyzer['connections'],origin)
+                for destination in lt.iterator(verticesB):
+                    dist=float(djk.distTo(busqueda,destination))
+                    #print(dist,origin,destination)
+                    if (dist<menor_distancia or menor_distancia==-150) and dist!='inf':
+                        menor_distancia=dist
+                        menor_origin=origin
+                        menor_destination=destination
+                        pathTo=djk.pathTo(busqueda,destination)
+    cadena=None
+    distanciatotal=0
+    if pathTo is not None:
+        cadena=''
+        while not stk.isEmpty(pathTo):
+            dicti=stk.pop(pathTo)
+            vertexA_origin=dicti['vertexA'].split('_')[0]
+            vertexB_origin=dicti['vertexB'].split('_')[0]
+            weight=str(dicti['weight'])
+            distanciatotal+=float(weight)
+            vertexA=get_landingpointname_by_id(analyzer,vertexA_origin)
+            vertexB=get_landingpointname_by_id(analyzer,vertexB_origin)
+            cadena+='De '+vertexA+' a '+vertexB+'. Distancia entre los landing points: '+weight+' km. \n'
+    
+    return cadena+'\nLa distancia total es de '+str(distanciatotal)+' km.'
+    
+
+
+
+
+def country_to_capital(analyzer,country_name):
+    entry=mp.get(analyzer['countries_map'],country_name)
+    hash_t=me.getValue(entry)
+    entry=mp.get(hash_t,'Capital')
+    return me.getValue(entry)
    
+def cityname_to_id(analyzer,city_name):
+    entry=mp.get(analyzer['landing_name_id_hash'],city_name)
+    return me.getValue(entry)
+
+def get_list_of_vertices(analyzer,vertex):
+    entry=mp.get(analyzer['id_name+id_hash'],vertex)
+    return me.getValue(entry)
+
+def get_landing_points_by_country(analyzer,country_name):
+    entry=mp.get(analyzer['country-landing_points'],country_name)
+    return me.getValue(entry)
+
+def get_landingpointname_by_id(analyzer,landingpointid):
+    entry=mp.get(analyzer['name_landing_id_hash'],landingpointid)
+    return me.getValue(entry)
+
 # Funciones para agregar informacion al catalogo
 
 # Funciones para creacion de datos
@@ -209,6 +295,8 @@ def newAnalyzer():
 
         analyzer['id_name+id_hash']=mp.newMap(numelements=20000,maptype='PROBING')
 
+        analyzer['country-landing_points']=mp.newMap(numelements=20000,maptype='PROBING')
+
         #TODO: Este mapa de 'LandPoints_Vertex' esta vacio
         analyzer['LandPoints_Vertex'] = mp.newMap(numelements=20000,
                                            maptype='PROBING'
@@ -216,6 +304,8 @@ def newAnalyzer():
         analyzer['landing_points_data'] = lt.newList('ARRAY_LIST')
         
         analyzer['countries'] = lt.newList('ARRAY_LIST')
+
+        analyzer['countries_map'] = mp.newMap(numelements=500,maptype='PROBING')
 
         analyzer['connections'] = gr.newGraph(datastructure='ADJ_LIST',
                                               directed=True,
@@ -228,6 +318,41 @@ def newAnalyzer():
         return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:newAnalyzer')
+
+def addCountryMap(analyzer,country):
+    if not mp.contains(analyzer['countries_map'],country['CountryName']):
+        datos=mp.newMap(numelements=10,maptype='PROBING')
+        mp.put(datos,'Capital',country['CapitalName'])
+        mp.put(datos,'Latitude',country['CapitalLatitude'])
+        mp.put(datos,'Longitude',country['CapitalLongitude'])
+        mp.put(analyzer['countries_map'], country['CountryName'], datos)
+
+def addLandingPCountry(analyzer,landingP):
+    country1=landingP['name'].split(',')
+    if len(country1)>2:
+        country=country1[2][1:]
+        if not mp.contains(analyzer['country-landing_points'],country):
+            lista=lt.newList('ARRAY_LIST')
+            lt.addLast(lista,landingP['landing_point_id'])
+            mp.put(analyzer['country-landing_points'],country,lista)
+        else:
+            entry=mp.get(analyzer['country-landing_points'],country)
+            lista=me.getValue(entry)
+            lt.addLast(lista,landingP['landing_point_id'])
+            mp.put(analyzer['country-landing_points'],country,lista)
+    elif len(country1)>1:
+        country=country1[1][1:]
+        if not mp.contains(analyzer['country-landing_points'],country):
+            lista=lt.newList('ARRAY_LIST')
+            lt.addLast(lista,landingP['landing_point_id'])
+            mp.put(analyzer['country-landing_points'],country,lista)
+        else:
+            entry=mp.get(analyzer['country-landing_points'],country)
+            lista=me.getValue(entry)
+            lt.addLast(lista,landingP['landing_point_id'])
+            mp.put(analyzer['country-landing_points'],country,lista)
+    
+
 
 def landing_points_hash_table(analyzer,landing_point):
     name=landing_point['name']

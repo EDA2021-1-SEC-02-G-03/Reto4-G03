@@ -60,6 +60,7 @@ def loadCountries(analyzer, countries_file):
     input_file = csv.DictReader(open(countries_file, encoding='utf-8-sig'), delimiter=',')
     for country in input_file:
         model.addCountry(analyzer, country)
+        model.addCountryMap(analyzer,country)
     return analyzer
 
 #########
@@ -88,6 +89,7 @@ def loadLandingPoints(analyzer, landingPoints_file):
     input_file = csv.DictReader(open(landingPoints_file, encoding='utf-8-sig'), delimiter=',')
     for landingP in input_file:
         model.addLandingPoint_data(analyzer, landingP)
+        model.addLandingPCountry(analyzer,landingP)
         model.landing_points_hash_table(analyzer, landingP)
         model.origin_hash_table(analyzer,landingP)
     return analyzer
@@ -120,6 +122,9 @@ def exist_path_landingPoint2(analyzer, dest_landingP):
 
 def req2(analyzer,key):
     return model.req2(analyzer,key)
+
+def req3(analyzer,paisA,paisB):
+    return model.req3(analyzer,paisA,paisB)
 
 # Funciones para la carga de datos
 
