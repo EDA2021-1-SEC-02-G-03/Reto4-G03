@@ -156,6 +156,9 @@ def req2(analyzer,key):
 def req3(analyzer,paisA,paisB):
     return model.req3(analyzer,paisA,paisB)
 
+def req4(analyzer):
+    return model.req4(analyzer)
+
 # Funciones para la carga de datos
 
 # Funciones de ordenamiento

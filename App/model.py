@@ -35,6 +35,7 @@ from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk 
 from DISClib.Utils import error as error
 from DISClib.ADT import stack as stk
+from DISClib.Algorithms.Graphs import prim
 assert cf
 
 """
@@ -226,8 +227,6 @@ def req1(analyzer,landingp1,landingp2):
     return (num_clusters,estan_o_no)
 
 def req2(analyzer,key):
-    #keys=mp.keySet(analyzer['interconnections'])
-    #for key in lt.iterator(keys):
     entry=mp.get(analyzer['interconnections'],key)
     lista=me.getValue(entry)
     numero=lt.removeFirst(lista)
@@ -258,18 +257,16 @@ def req3(analyzer,paisA,paisB):
     landingpointsA=get_landing_points_by_country(analyzer,paisA)
     landingpointsB=get_landing_points_by_country(analyzer,paisB)
     
-
+    #Iteración: Se tienen en cuenta todos los landingpoints del pais A y del pais B.
     for landingpointA in lt.iterator(landingpointsA):
-        #print('landingpointA:',landingpointA)
         verticesA=get_list_of_vertices(analyzer,landingpointA)
         for landingpointB in lt.iterator(landingpointsB):
-            #print('landingpointB:',landingpointB)
             verticesB=get_list_of_vertices(analyzer,landingpointB)
+    #Fin de iteración de landingpoints de ambos países. 
             for origin in lt.iterator(verticesA):
                 busqueda=djk.Dijkstra(analyzer['connections'],origin)
                 for destination in lt.iterator(verticesB):
                     dist=float(djk.distTo(busqueda,destination))
-                    #print(dist,origin,destination)
                     if (dist<menor_distancia or menor_distancia==-150) and dist!='inf':
                         menor_distancia=dist
                         menor_origin=origin
@@ -293,8 +290,12 @@ def req3(analyzer,paisA,paisB):
     else:
         return None
 
-
-
+def req4(analyzer):
+    MST=prim.PrimMST(analyzer['connections_normal'])
+    ultimo=MST['ultimo']
+    MST1={'edgeTo':MST['edgeTo'],'distTo':MST['distTo'],'marked':MST['marked'],'pq':MST['pq'],'mst':MST['mst']}
+    costo_total=prim.scan(analyzer['connections_normal'],MST1,ultimo)
+    print(costo_total)
 
 def country_to_capital(analyzer,country_name):
     entry=mp.get(analyzer['countries_map'],country_name)

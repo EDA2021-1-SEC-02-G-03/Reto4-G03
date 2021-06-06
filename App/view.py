@@ -180,7 +180,7 @@ while True:
 
     elif int(inputs[0]) == 6:
         #Árbol de Recubrimiento de Costo Mínimo
-
+        controller.req4(cont)
         
         pass
 
