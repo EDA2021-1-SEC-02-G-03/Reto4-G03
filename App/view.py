@@ -24,11 +24,14 @@
 import config as cf
 import sys
 import controller
+import model
 from DISClib.ADT import list as lt
 assert cf
 from DISClib.ADT import graph as gp
 import time
 import tracemalloc
+from DISClib.ADT import list as lt
+from DISClib.ADT import map as mp
 
 """
 La vista se encarga de la interacción con el usuario
@@ -125,9 +128,14 @@ while True:
    
 
     elif int(inputs[0]) == 3:
+        #TODO: Hay que hacerle algo a los landing points para que se revisen todos los landing points con la string de id.
+        #Idea: crear un mapa que relacione landing point sin id con todos los landing points con ids y realizar el algoritmo
+        # para cada uno de ellos.
 
-        landing_point1 = input('Ingrese el nombre del landing point 1')
-        landing_point2 = input('Ingrese el nombre del landing point 2')
+
+        
+        landing_point1 = input('Ingrese el nombre del landing point 1: ')
+        landing_point2 = input('Ingrese el nombre del landing point 2: ')
 
 
 
@@ -139,14 +147,46 @@ while True:
         print('Número total de cluster presentes en la red: ' + str(total))
         print('Existe camino :/')
         print(exists)
+        
 
     elif int(inputs[0]) == 4:
+        '''
+        keys=mp.valueSet(cont['name_landing_id_hash'])
+        for i in lt.iterator(keys):
+            print(i)
+        '''
+
+        print("Los landing points que sirven como punto de interconexión a más cables en la red son: ")
+        keys=mp.keySet(cont['interconnections'])
+        for key in lt.iterator(keys):
+            resultado=controller.req2(cont,key)
+            if resultado is not None:
+                print(resultado)
+
         pass
 
     elif int(inputs[0]) == 5:
+        
+        paisA=input('Ingrese el país A: ')
+        paisB=input('Ingrese el país B: ')
+        resultado=controller.req3(cont,paisA,paisB)
+        if resultado is None:
+            print('No se encontró camino entre los dos países ingresados.')
+        else:
+            print(resultado)
+
+        '''
+        keys=mp.keySet(cont['country-landing_points'])
+        for i in lt.iterator(keys):
+            print(i)
+        '''
+        
         pass
 
     elif int(inputs[0]) == 6:
+        #Árbol de Recubrimiento de Costo Mínimo
+
+        
         pass
 
     elif int(inputs[0]) == 7:

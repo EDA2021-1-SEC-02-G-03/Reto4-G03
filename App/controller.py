@@ -27,6 +27,7 @@ import time
 import tracemalloc
 
 
+
 """
 El controlador se encarga de mediar entre la vista y el modelo.
 """
@@ -61,6 +62,7 @@ def loadCountries(analyzer, countries_file):
     input_file = csv.DictReader(open(countries_file, encoding='utf-8-sig'), delimiter=',')
     for country in input_file:
         model.addCountry(analyzer, country)
+        model.addCountryMap(analyzer,country)
     return analyzer
 
 #########
@@ -89,6 +91,9 @@ def loadLandingPoints(analyzer, landingPoints_file):
     input_file = csv.DictReader(open(landingPoints_file, encoding='utf-8-sig'), delimiter=',')
     for landingP in input_file:
         model.addLandingPoint_data(analyzer, landingP)
+        model.addLandingPCountry(analyzer,landingP)
+        model.landing_points_hash_table(analyzer, landingP)
+        model.origin_hash_table(analyzer,landingP)
     return analyzer
 
 
@@ -111,6 +116,7 @@ def connectedComponents(analyzer):
     return model.find_connectedComponents(analyzer)
 
 def paths_landingPoint1(analyzer, origin_landingP):
+    
     return model.paths_landingPoint1(analyzer, origin_landingP)
 
 def exist_path_landingPoint2(analyzer, dest_landingP):
@@ -142,6 +148,11 @@ def deltaMemory(start_memory, stop_memory):
     # de Byte -> kByte
     delta_memory = delta_memory/1024.0
     return delta_memory
+def req2(analyzer,key):
+    return model.req2(analyzer,key)
+
+def req3(analyzer,paisA,paisB):
+    return model.req3(analyzer,paisA,paisB)
 
 # Funciones para la carga de datos
 
