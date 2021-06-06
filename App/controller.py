@@ -48,13 +48,9 @@ def loadConnections(analyzer, connections_file):
 
     connections_file = cf.data_dir + connections_file
     input_file = csv.DictReader(open(connections_file, encoding='utf-8-sig'), delimiter=',')
-    #lastLandPoint = None
     for connection in input_file:
-        #if lastLandPoint is not None:
-            # samePointOrigin = lastLandPoint['origin'] == landPoint['origin']
-            # samePointDestination = lastLandPoint['destination'] == landPoint['destination']
-            # LandingPointId = lastLandPoint['']
         model.addLandingPoint(analyzer, connection)
+        model.addLandingPointNormal(analyzer,connection)
     return analyzer
 
 def loadCountries(analyzer, countries_file):
@@ -94,6 +90,7 @@ def loadLandingPoints(analyzer, landingPoints_file):
         model.addLandingPCountry(analyzer,landingP)
         model.landing_points_hash_table(analyzer, landingP)
         model.origin_hash_table(analyzer,landingP)
+        model.landing_points_hash_no_country(analyzer,landingP)
     return analyzer
 
 
@@ -148,6 +145,11 @@ def deltaMemory(start_memory, stop_memory):
     # de Byte -> kByte
     delta_memory = delta_memory/1024.0
     return delta_memory
+
+
+def req1(analyzer,lp1,lp2):
+    return model.req1(analyzer,lp1,lp2)
+
 def req2(analyzer,key):
     return model.req2(analyzer,key)
 

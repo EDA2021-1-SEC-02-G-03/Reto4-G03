@@ -32,6 +32,7 @@ import time
 import tracemalloc
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
+from DISClib.ADT import graph as gr
 
 """
 La vista se encarga de la interacción con el usuario
@@ -137,18 +138,12 @@ while True:
         landing_point1 = input('Ingrese el nombre del landing point 1: ')
         landing_point2 = input('Ingrese el nombre del landing point 2: ')
 
+        tupla_res=controller.req1(cont,landing_point1,landing_point2)
 
-
-        total = controller.connectedComponents(cont)
-        controller.paths_landingPoint1(cont, landing_point1)
-        exists = controller.exist_path_landingPoint2(cont, landing_point2)
-
-
-        print('Número total de cluster presentes en la red: ' + str(total))
-        print('Existe camino :/')
-        print(exists)
-        
-
+        if tupla_res[1]:
+            print('El número total de clústeres presentes en la red es '+str(tupla_res[0])+' clústeres. Los dos landing points SI están en el mismo cluster.')
+        elif not tupla_res[1]:
+            print('El número total de clústeres presentes en la red es '+str(tupla_res[0])+' clústeres. Los dos landing points NO están en el mismo cluster.')
     elif int(inputs[0]) == 4:
         '''
         keys=mp.valueSet(cont['name_landing_id_hash'])

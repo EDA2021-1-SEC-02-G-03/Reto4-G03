@@ -80,6 +80,44 @@ def addLandingPoint(analyzer, connections):
     except Exception as exp:
         error.reraise(exp, 'model:addLandConnection')
 
+def addLandingPointNormal(analyzer,connections):
+    try:
+        origin = connections['origin']
+        destination = connections['destination']
+        distance = convert_distance(connections['cable_length'])
+        addLandPointNormal(analyzer, origin)
+        addLandPointNormal(analyzer, destination)
+        addConnectionNormal(analyzer, origin, destination, distance)
+        '''
+        if not mp.contains(analyzer['id_name+id_hash'],connections['origin']):
+            lista=lt.newList('ARRAY_LIST')
+            lt.addLast(lista, origin)
+            mp.put(analyzer['id_name+id_hash'],connections['origin'],lista)
+        else:
+            entry=mp.get(analyzer['id_name+id_hash'],connections['origin'])
+            lista=me.getValue(entry)
+            if not lt.isPresent(lista,origin):
+                lt.addLast(lista,origin)
+                mp.put(analyzer['id_name+id_hash'],connections['origin'],lista)
+
+        if not mp.contains(analyzer['id_name+id_hash'],connections['destination']):
+            lista=lt.newList('ARRAY_LIST')
+            lt.addLast(lista, destination)
+            mp.put(analyzer['id_name+id_hash'],connections['destination'],lista)
+        else:
+            entry=mp.get(analyzer['id_name+id_hash'],connections['destination'])
+            lista=me.getValue(entry)
+            if not lt.isPresent(lista,destination):
+                lt.addLast(lista,destination)
+                mp.put(analyzer['id_name+id_hash'],connections['destination'],lista)
+        addInterconnection(analyzer,connections)
+        '''
+
+        return analyzer
+    except Exception as exp:
+        error.reraise(exp, 'model:addLandConnectionNormal')
+
+
 def addInterconnection(analyzer,connection):
     if not mp.contains(analyzer['interconnections'], connection['origin']):
         #El primer elemento de la lista contiene la cantidad de cables. Los demás elementos son los cables.
@@ -111,6 +149,12 @@ def addConnection(analyzer, origin, destination, distance):
         gr.addEdge(analyzer['connections'], origin, destination, distance)
     return analyzer 
 
+def addConnectionNormal(analyzer, origin, destination, distance):
+    edge = gr.getEdge(analyzer['connections_normal'], origin, destination)
+    if edge is None:
+        gr.addEdge(analyzer['connections_normal'], origin, destination, distance)
+    return analyzer 
+
 def addLandPoint(analyzer, LandPoint):
     try:
         if not gr.containsVertex(analyzer['connections'], LandPoint):
@@ -118,6 +162,14 @@ def addLandPoint(analyzer, LandPoint):
         return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:addLandPoint')
+
+def addLandPointNormal(analyzer,LandPoint):
+    try:
+        if not gr.containsVertex(analyzer['connections_normal'], LandPoint):
+            gr.insertVertex(analyzer['connections_normal'], LandPoint)
+        return analyzer
+    except Exception as exp:
+        error.reraise(exp, 'model:addLandPointNormal')
 
 def convert_distance(cable_length):
    dato=cable_length.replace(',', '').split(' ')[0]
@@ -164,6 +216,14 @@ def paths_landingPoint1(analyzer, origin_landingP):
 
 def exist_path_landingPoint2(analyzer, dest_landingP):
     return djk.hasPathTo(analyzer['connections'], dest_landingP)
+
+def req1(analyzer,landingp1,landingp2):
+    kosaraju=scc.KosarajuSCC(analyzer['connections_normal'])
+    num_clusters=kosaraju['components']
+    origin=str(cityname_to_id(analyzer,landingp1))
+    destination=str(cityname_to_id(analyzer,landingp2))
+    estan_o_no=scc.stronglyConnected(kosaraju,origin,destination)
+    return (num_clusters,estan_o_no)
 
 def req2(analyzer,key):
     #keys=mp.keySet(analyzer['interconnections'])
@@ -229,8 +289,9 @@ def req3(analyzer,paisA,paisB):
             vertexB=get_landingpointname_by_id(analyzer,vertexB_origin)
             cadena+='De '+vertexA+' a '+vertexB+'. Distancia entre los landing points: '+weight+' km. \n'
     
-    return cadena+'\nLa distancia total es de '+str(distanciatotal)+' km.'
-    
+        return cadena+'\nLa distancia total es de '+str(distanciatotal)+' km.'
+    else:
+        return None
 
 
 
@@ -242,7 +303,7 @@ def country_to_capital(analyzer,country_name):
     return me.getValue(entry)
    
 def cityname_to_id(analyzer,city_name):
-    entry=mp.get(analyzer['landing_name_id_hash'],city_name)
+    entry=mp.get(analyzer['landing_name_id_hash_no_country'],city_name)
     return me.getValue(entry)
 
 def get_list_of_vertices(analyzer,vertex):
@@ -256,7 +317,6 @@ def get_landing_points_by_country(analyzer,country_name):
 def get_landingpointname_by_id(analyzer,landingpointid):
     entry=mp.get(analyzer['name_landing_id_hash'],landingpointid)
     return me.getValue(entry)
-
 # Funciones para agregar informacion al catalogo
 
 # Funciones para creacion de datos
@@ -291,6 +351,8 @@ def newAnalyzer():
 
         analyzer['landing_name_id_hash']=mp.newMap(numelements=20000,maptype='PROBING')
 
+        analyzer['landing_name_id_hash_no_country']=mp.newMap(numelements=20000,maptype='PROBING')
+
         analyzer['name_landing_id_hash']=mp.newMap(numelements=20000,maptype='PROBING')
 
         analyzer['id_name+id_hash']=mp.newMap(numelements=20000,maptype='PROBING')
@@ -312,12 +374,18 @@ def newAnalyzer():
                                               size = 20000,
                                               comparefunction=compareLandingPoints
                                               )
+        analyzer['connections_normal']=gr.newGraph(datastructure='ADJ_LIST',
+                                              directed=True,
+                                              size = 20000,
+                                              comparefunction=compareLandingPoints
+                                              )
         #Los vértices del grafo connections son landing point id + _ + cable id
         #TODO: Crear mapa que relacione landing point name con todos los posibles vertices de dicho landing point para el grafo.
 
         return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:newAnalyzer')
+
 
 def addCountryMap(analyzer,country):
     if not mp.contains(analyzer['countries_map'],country['CountryName']):
@@ -359,6 +427,13 @@ def landing_points_hash_table(analyzer,landing_point):
     land_id=landing_point['landing_point_id']
     if not mp.contains(analyzer['landing_name_id_hash'],name):
         mp.put(analyzer['landing_name_id_hash'],name,land_id)
+
+def landing_points_hash_no_country(analyzer,landing_point):
+    name=landing_point['name'].split(',')[0]
+    land_id=landing_point['landing_point_id']
+    if not mp.contains(analyzer['landing_name_id_hash_no_country'],name):
+        mp.put(analyzer['landing_name_id_hash_no_country'],name,land_id)
+    
 
 def origin_hash_table(analyzer,landing_point):
     name=landing_point['name']
