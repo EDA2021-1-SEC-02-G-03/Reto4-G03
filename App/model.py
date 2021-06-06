@@ -72,24 +72,37 @@ def addLandingPoint(analyzer, connections):
             if not lt.isPresent(lista,destination):
                 lt.addLast(lista,destination)
                 mp.put(analyzer['id_name+id_hash'],connections['destination'],lista)
+        addInterconnection(analyzer,connections)
 
 
         return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:addLandConnection')
 
+def addInterconnection(analyzer,connection):
+    if not mp.contains(analyzer['interconnections'], connection['origin']):
+        #El primer elemento de la lista contiene la cantidad de cables. Los demás elementos son los cables.
+        lista=lt.newList('ARRAY_LIST')
+        lt.addLast(lista,1)
+        lt.addLast(lista,connection['cable_id'])
+        mp.put(analyzer['interconnections'],connection['origin'],lista)
+    elif mp.contains(analyzer['interconnections'], connection['origin']):
+        entry=mp.get(analyzer['interconnections'],connection['origin'])
+        lista=me.getValue(entry)
+        esta=False
+        for i in lt.iterator(lista):
+            if i==connection['cable_id']:
+                esta=True
+        if not esta:
+            numero=lt.removeFirst(lista)
+            numero+=1
+            lt.addFirst(lista,numero)
+
 def addCountry(analyzer, country):
     lt.addLast(analyzer['countries'], country)
 
 def addLandingPoint_data(analyzer, LandingPoint):
     lt.addLast(analyzer['landing_points_data'], LandingPoint)
-
-# def addLandPointVertex(analyzer, LandPoint):
-#     entry = mp.get(analyzer['LandPoints_Vertex'], LandPoint)
-#     if entry is None:
-#         lstConnections = lt.newList('ARRAY_LIST')
-#         lt.addLast(lstConnections, )
-#     pass
 
 def addConnection(analyzer, origin, destination, distance):
     edge = gr.getEdge(analyzer['connections'], origin, destination)
@@ -128,11 +141,13 @@ def first_landingP(analyzer):
 def find_connectedComponents(analyzer):
 
     analyzer['connections'] = scc.KosarajuSCC(analyzer['connections'])
-    return scc.connectedComponents(analyzer['connections'])
+    return scc.sccCount(analyzer['connections'])
 
 def paths_landingPoint1(analyzer, origin_landingP):
     #Llamar a la funcion paths landing point 1 con todos los vertices de dicho landing point
     analyzer['clusters']=[]
+    landingpoints=mp.keySet(analyzer['landing_name_id_hash'])
+    origin_landingP=lt.getElement(landingpoints,1)
     entry=mp.get(analyzer['landing_name_id_hash'],origin_landingP)
     origin_id=me.getValue(entry)
     entry=mp.get(analyzer['id_name+id_hash'],origin_id)
@@ -145,12 +160,17 @@ def paths_landingPoint1(analyzer, origin_landingP):
 def exist_path_landingPoint2(analyzer, dest_landingP):
     return djk.hasPathTo(analyzer['connections'], dest_landingP)
 
-#def find_con
-
-    #print(info)
-# Construccion de modelos
-#print(convert_distance('31,000 km'))
-
+def req2(analyzer,key):
+    #keys=mp.keySet(analyzer['interconnections'])
+    #for key in lt.iterator(keys):
+    entry=mp.get(analyzer['interconnections'],key)
+    lista=me.getValue(entry)
+    numero=lt.removeFirst(lista)
+    if numero > 1:
+        entry1=mp.get(analyzer['name_landing_id_hash'],key)
+        lt.addFirst(lista,numero)
+        return me.getValue(entry1)+'. ID: '+key+'. Total de cables conectados: '+str(numero)
+   
 # Funciones para agregar informacion al catalogo
 
 # Funciones para creacion de datos
@@ -181,9 +201,14 @@ def newAnalyzer():
                     'clusters':None
                     }
         
+        analyzer['interconnections']=mp.newMap(numelements=20000,maptype='PROBING')
 
         analyzer['landing_name_id_hash']=mp.newMap(numelements=20000,maptype='PROBING')
+
+        analyzer['name_landing_id_hash']=mp.newMap(numelements=20000,maptype='PROBING')
+
         analyzer['id_name+id_hash']=mp.newMap(numelements=20000,maptype='PROBING')
+
         #TODO: Este mapa de 'LandPoints_Vertex' esta vacio
         analyzer['LandPoints_Vertex'] = mp.newMap(numelements=20000,
                                            maptype='PROBING'
@@ -209,6 +234,13 @@ def landing_points_hash_table(analyzer,landing_point):
     land_id=landing_point['landing_point_id']
     if not mp.contains(analyzer['landing_name_id_hash'],name):
         mp.put(analyzer['landing_name_id_hash'],name,land_id)
+
+def origin_hash_table(analyzer,landing_point):
+    name=landing_point['name']
+    land_id=landing_point['landing_point_id']
+    if not mp.contains(analyzer['name_landing_id_hash'],land_id):
+        mp.put(analyzer['name_landing_id_hash'],land_id,name)
+
     
 
 

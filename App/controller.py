@@ -25,6 +25,7 @@ import model
 import csv
 
 
+
 """
 El controlador se encarga de mediar entre la vista y el modelo.
 """
@@ -88,6 +89,7 @@ def loadLandingPoints(analyzer, landingPoints_file):
     for landingP in input_file:
         model.addLandingPoint_data(analyzer, landingP)
         model.landing_points_hash_table(analyzer, landingP)
+        model.origin_hash_table(analyzer,landingP)
     return analyzer
 
 
@@ -115,6 +117,9 @@ def paths_landingPoint1(analyzer, origin_landingP):
 
 def exist_path_landingPoint2(analyzer, dest_landingP):
     return model.exist_path_landingPoint2(analyzer, dest_landingP)
+
+def req2(analyzer,key):
+    return model.req2(analyzer,key)
 
 # Funciones para la carga de datos
 

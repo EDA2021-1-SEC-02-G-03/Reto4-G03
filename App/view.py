@@ -24,6 +24,7 @@
 import config as cf
 import sys
 import controller
+import model
 from DISClib.ADT import list as lt
 assert cf
 from DISClib.ADT import graph as gp
@@ -128,16 +129,21 @@ while True:
         print('Existe camino :/')
         print(exists)
         
-        '''
-        encadenada=mp.valueSet(cont['id_name+id_hash'])
-        for i in lt.iterator(encadenada):
-            for t in lt.iterator(i):
-                print(t)
-            break
-        print(mp.isEmpty(cont['id_name+id_hash']))
-        '''
 
     elif int(inputs[0]) == 4:
+        '''
+        keys=mp.valueSet(cont['name_landing_id_hash'])
+        for i in lt.iterator(keys):
+            print(i)
+        '''
+
+        print("Los landing points que sirven como punto de interconexión a más cables en la red son: ")
+        keys=mp.keySet(cont['interconnections'])
+        for key in lt.iterator(keys):
+            resultado=controller.req2(cont,key)
+            if resultado is not None:
+                print(resultado)
+
         pass
 
     elif int(inputs[0]) == 5:
