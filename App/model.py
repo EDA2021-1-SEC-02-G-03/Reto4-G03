@@ -298,7 +298,6 @@ def req4(analyzer):
     distance=prim.weightMST(analyzer['connections_normal'],search)
     mst=search['mst']
     numberofnodes=qu.size(mst)
-    print(gr.numVertices(analyzer['connections_normal']))
     return(distance,numberofnodes)
 
 def req5(analyzer,landingP):

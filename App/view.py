@@ -133,20 +133,47 @@ while True:
         landing_point1 = input('Ingrese el nombre del landing point 1: ')
         landing_point2 = input('Ingrese el nombre del landing point 2: ')
 
-        tupla_res=controller.req1(cont,landing_point1,landing_point2)
+        delta_time = -1.0
+        delta_memory = -1.0
 
+        tracemalloc.start()
+        start_time = controller.getTime()
+        start_memory = controller.getMemory()
+
+        tupla_res=controller.req1(cont,landing_point1,landing_point2)
+        
         if tupla_res[1]:
             print('El número total de clústeres presentes en la red es '+str(tupla_res[0])+' clústeres. Los dos landing points SI están en el mismo cluster.')
         elif not tupla_res[1]:
             print('El número total de clústeres presentes en la red es '+str(tupla_res[0])+' clústeres. Los dos landing points NO están en el mismo cluster.')
-    elif int(inputs[0]) == 4:
+        
+        stop_memory = controller.getMemory()
+        stop_time = controller.getTime()
+        tracemalloc.stop()
 
+        delta_time = stop_time - start_time
+        delta_memory = controller.deltaMemory(start_memory, stop_memory)
+        print('Tiempo[ms]: ', f"{delta_time:.3f}", "-", "Memoria [kB]: ", f"{delta_memory:.3f}")
+    elif int(inputs[0]) == 4:
+        delta_time = -1.0
+        delta_memory = -1.0
+
+        tracemalloc.start()
+        start_time = controller.getTime()
+        start_memory = controller.getMemory()
         print("Los landing points que sirven como punto de interconexión a más cables en la red son: ")
         keys=mp.keySet(cont['interconnections'])
         for key in lt.iterator(keys):
             resultado=controller.req2(cont,key)
             if resultado is not None:
                 print(resultado)
+        stop_memory = controller.getMemory()
+        stop_time = controller.getTime()
+        tracemalloc.stop()
+
+        delta_time = stop_time - start_time
+        delta_memory = controller.deltaMemory(start_memory, stop_memory)
+        print('Tiempo[ms]: ', f"{delta_time:.3f}", "-", "Memoria [kB]: ", f"{delta_memory:.3f}")
 
         pass
 
@@ -154,23 +181,55 @@ while True:
         
         paisA=input('Ingrese el país A: ')
         paisB=input('Ingrese el país B: ')
+        delta_time = -1.0
+        delta_memory = -1.0
+
+        tracemalloc.start()
+        start_time = controller.getTime()
+        start_memory = controller.getMemory()
         resultado=controller.req3(cont,paisA,paisB)
         if resultado is None:
             print('No se encontró camino entre los dos países ingresados.')
         else:
             print(resultado)
-        
+        stop_memory = controller.getMemory()
+        stop_time = controller.getTime()
+        tracemalloc.stop()
+
+        delta_time = stop_time - start_time
+        delta_memory = controller.deltaMemory(start_memory, stop_memory)
+        print('Tiempo[ms]: ', f"{delta_time:.3f}", "-", "Memoria [kB]: ", f"{delta_memory:.3f}")
         pass
 
     elif int(inputs[0]) == 6:
-        resultado=controller.req4(cont)
-        print('Hay '+str(resultado[1])+' nodos conectados a la red de expansión mínima. La distancia de la red de expansión mínima es de '+str(resultado[0])+' km.')
+        delta_time = -1.0
+        delta_memory = -1.0
 
+        tracemalloc.start()
+        start_time = controller.getTime()
+        start_memory = controller.getMemory()
+
+        resultado=controller.req4(cont)
+        print('Hay '+str(resultado[1])+' nodos conectados a la red de expansión mínima. La distancia total de la red de expansión mínima es de '+str(resultado[0])+' km.')
+        stop_memory = controller.getMemory()
+        stop_time = controller.getTime()
+        tracemalloc.stop()
+
+        delta_time = stop_time - start_time
+        delta_memory = controller.deltaMemory(start_memory, stop_memory)
+        print('Tiempo[ms]: ', f"{delta_time:.3f}", "-", "Memoria [kB]: ", f"{delta_memory:.3f}")
         pass
 
     elif int(inputs[0]) == 7:
         
         landing_point=input('Teclee el landing point que tendría el fallo: ')
+        delta_time = -1.0
+        delta_memory = -1.0
+
+        tracemalloc.start()
+        start_time = controller.getTime()
+        start_memory = controller.getMemory()
+
         tupla=controller.req5(cont,landing_point)
         size=tupla[0]
         lista=tupla[1]
@@ -182,15 +241,13 @@ while True:
             if pais not in impresos:
                 print(cadena)
                 impresos.append(pais)
+        stop_memory = controller.getMemory()
+        stop_time = controller.getTime()
+        tracemalloc.stop()
 
-
-
-
-
-
-        '''
-        print(gr.adjacentEdges(cont['connections'],'4181_2africa'))
-        '''
+        delta_time = stop_time - start_time
+        delta_memory = controller.deltaMemory(start_memory, stop_memory)
+        print('Tiempo[ms]: ', f"{delta_time:.3f}", "-", "Memoria [kB]: ", f"{delta_memory:.3f}")
 
 
 
