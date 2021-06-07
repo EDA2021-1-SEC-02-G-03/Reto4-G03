@@ -41,11 +41,6 @@ from DISClib.Algorithms.Graphs import prim
 from DISClib.DataStructures import bst
 assert cf
 
-"""
-Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
-los mismos.
-"""
-
 
 def addLandingPoint(analyzer, connections):
     
@@ -92,30 +87,6 @@ def addLandingPointNormal(analyzer,connections):
         addLandPointNormal(analyzer, origin)
         addLandPointNormal(analyzer, destination)
         addConnectionNormal(analyzer, origin, destination, distance)
-        '''
-        if not mp.contains(analyzer['id_name+id_hash'],connections['origin']):
-            lista=lt.newList('ARRAY_LIST')
-            lt.addLast(lista, origin)
-            mp.put(analyzer['id_name+id_hash'],connections['origin'],lista)
-        else:
-            entry=mp.get(analyzer['id_name+id_hash'],connections['origin'])
-            lista=me.getValue(entry)
-            if not lt.isPresent(lista,origin):
-                lt.addLast(lista,origin)
-                mp.put(analyzer['id_name+id_hash'],connections['origin'],lista)
-
-        if not mp.contains(analyzer['id_name+id_hash'],connections['destination']):
-            lista=lt.newList('ARRAY_LIST')
-            lt.addLast(lista, destination)
-            mp.put(analyzer['id_name+id_hash'],connections['destination'],lista)
-        else:
-            entry=mp.get(analyzer['id_name+id_hash'],connections['destination'])
-            lista=me.getValue(entry)
-            if not lt.isPresent(lista,destination):
-                lt.addLast(lista,destination)
-                mp.put(analyzer['id_name+id_hash'],connections['destination'],lista)
-        addInterconnection(analyzer,connections)
-        '''
 
         return analyzer
     except Exception as exp:
@@ -124,7 +95,6 @@ def addLandingPointNormal(analyzer,connections):
 
 def addInterconnection(analyzer,connection):
     if not mp.contains(analyzer['interconnections'], connection['origin']):
-        #El primer elemento de la lista contiene la cantidad de cables. Los demás elementos son los cables.
         lista=lt.newList('ARRAY_LIST')
         lt.addLast(lista,1)
         lt.addLast(lista,connection['cable_id'])
@@ -204,23 +174,6 @@ def find_connectedComponents(analyzer):
     analyzer['connections'] = scc.KosarajuSCC(analyzer['connections'])
     return scc.sccCount(analyzer['connections'])
 
-def paths_landingPoint1(analyzer, origin_landingP):
-    #Llamar a la funcion paths landing point 1 con todos los vertices de dicho landing point
-    analyzer['clusters']=[]
-    landingpoints=mp.keySet(analyzer['landing_name_id_hash'])
-    origin_landingP=lt.getElement(landingpoints,1)
-    entry=mp.get(analyzer['landing_name_id_hash'],origin_landingP)
-    origin_id=me.getValue(entry)
-    entry=mp.get(analyzer['id_name+id_hash'],origin_id)
-    lista=me.getValue(entry)
-    for origin in lt.iterator(lista):
-        print(origin)
-        analyzer['clusters'].append(djk.Dijkstra(analyzer['connections'], origin))
-    return analyzer
-
-def exist_path_landingPoint2(analyzer, dest_landingP):
-    return djk.hasPathTo(analyzer['connections'], dest_landingP)
-
 def req1(analyzer,landingp1,landingp2):
     kosaraju=scc.KosarajuSCC(analyzer['connections_normal'])
     num_clusters=kosaraju['components']
@@ -239,19 +192,6 @@ def req2(analyzer,key):
         return me.getValue(entry1)+'. ID: '+key+'. Total de cables conectados: '+str(numero)
 
 def req3(analyzer,paisA,paisB):
-
-    '''
-    capitalA=country_to_capital(analyzer,paisA)
-    capitalB=country_to_capital(analyzer,paisB)
-    #No todas las capitales tienen landing points. Bogota, por ejemplo, no tiene.
-    print(capitalA)
-    nameA=capitalA+', '+paisA
-    nameB=capitalB+', '+paisB
-    idA=cityname_to_id(analyzer,nameA)
-    idB=cityname_to_id(analyzer,nameB)
-    verticesA=get_list_of_vertices(analyzer,idA)
-    verticesB=get_list_of_vertices(analyzer,idB)
-    '''
 
     menor_distancia=-150
     menor_origin=''
@@ -351,13 +291,6 @@ def get_landing_points_by_country(analyzer,country_name):
 def get_landingpointname_by_id(analyzer,landingpointid):
     entry=mp.get(analyzer['name_landing_id_hash'],landingpointid)
     return me.getValue(entry)
-# Funciones para agregar informacion al catalogo
-
-# Funciones para creacion de datos
-
-# Funciones de consulta
-
-# Funciones utilizadas para comparar elementos dentro de una lista
 
 def compareLandingPoints(value, keyValue):
     value_land = keyValue['key']
@@ -368,10 +301,6 @@ def compareLandingPoints(value, keyValue):
     else:
         return -1
 
-# Funciones de ordenamiento
-
-
-#Funciones Creadas por Juan Andrés
 def newAnalyzer():
     try:
         analyzer = {
@@ -393,10 +322,6 @@ def newAnalyzer():
 
         analyzer['country-landing_points']=mp.newMap(numelements=20000,maptype='PROBING')
 
-        #TODO: Este mapa de 'LandPoints_Vertex' esta vacio
-        analyzer['LandPoints_Vertex'] = mp.newMap(numelements=20000,
-                                           maptype='PROBING'
-                                           )
         analyzer['landing_points_data'] = lt.newList('ARRAY_LIST')
         
         analyzer['countries'] = lt.newList('ARRAY_LIST')
@@ -414,7 +339,7 @@ def newAnalyzer():
                                               comparefunction=compareLandingPoints
                                               )
         #Los vértices del grafo connections son landing point id + _ + cable id
-        #TODO: Crear mapa que relacione landing point name con todos los posibles vertices de dicho landing point para el grafo.
+        
 
         return analyzer
     except Exception as exp:

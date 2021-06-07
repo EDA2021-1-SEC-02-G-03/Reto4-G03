@@ -58,12 +58,6 @@ def printMenu():
     print("====================================================================")
     print("7- Impacto que podria tener el fallo de un determinado landing\n   point que afecta a todos los cables conectados al mismo") #REQUERIMIENTO-5
     print("====================================================================")
-    print("8- Ancho de banda máximo que se puede garantizar para la transmisión\n   a un servidor ubicado en el país") #REQUERIMIENTO-6
-    print("====================================================================")
-    print("9- Ruta mínima en número de saltos para enviar inforamción entre dos\n   direcciones IP dadas") #REQUERIMIENTO-7
-    print("====================================================================")
-    print("10- Graficar resultados") #REQUERIMIENTO-8
-    print("====================================================================")
 
 catalog = None
 
@@ -98,7 +92,6 @@ while True:
         total_landingPoints = controller.totalLandingPoints(cont)
         total_ConnectionsLP = controller.totalConnectionsLP(cont)
         first_landing_point = controller.first_landingP(cont)
-        #controller.first_landingP(cont)
         total_countries = controller.totalCountries(cont)
 
         stop_memory = controller.getMemory()
@@ -117,12 +110,10 @@ while True:
         print('El total de paises es: ' + str(total_countries))
         print('-------------------------------')
         print('Primer Landing Point Cargado')
-        #print('-------------------------------')
         print('Landing Point id: '+first_landing_point[0]+'| nombre: '+first_landing_point[1]
         +'| latitud: '+first_landing_point[2]+'| longitud: '+first_landing_point[3])
         print('-------------------------------')
         print('Ultimo País Cargado')
-        #print('-------------------------------')
         print('País: '+last_country[0]+'| Población: '+last_country[1]+ ' | Número de usuarios: '+last_country[2])
         print('-------------------------------')
         print('')
@@ -252,16 +243,6 @@ while True:
 
 
         pass
-
-    elif int(inputs[0]) == 8:
-        pass
-
-    elif int(inputs[0]) == 9:
-        pass
-
-    elif int(inputs[0]) == 10:
-        pass
-
     else:
         sys.exit(0)
 sys.exit(0)

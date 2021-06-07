@@ -32,13 +32,6 @@ import tracemalloc
 El controlador se encarga de mediar entre la vista y el modelo.
 """
 
-# def newAnalyzer():
-#     model.newAnalyzer()
-
-
-
-# Inicialización del Catálogo de libros
-
 def init():
 
     analyzer = model.newAnalyzer()
@@ -60,27 +53,6 @@ def loadCountries(analyzer, countries_file):
         model.addCountry(analyzer, country)
         model.addCountryMap(analyzer,country)
     return analyzer
-
-#########
-#TESTING#
-#########
-
-# def Manual_testing(countries_file):
-#     checker = {}
-#     countries_file = cf.data_dir + countries_file
-#     input_file = csv.DictReader(open(countries_file, encoding='utf-8-sig'), delimiter=',')
-#     for landing_point in input_file:
-#         data = landing_point['name'].split(',')[0]
-#         print(data)
-#         try:
-#             checker[data] = 1
-#         except:
-#             checker[data] = 0
-
-#     print(len(checker))
-        
-    
-#Manual_testing('landing_points.csv')
 
 def loadLandingPoints(analyzer, landingPoints_file):
     landingPoints_file = cf.data_dir + landingPoints_file
@@ -138,11 +110,8 @@ def deltaMemory(start_memory, stop_memory):
     """
     memory_diff = stop_memory.compare_to(start_memory, "filename")
     delta_memory = 0.0
-
-    # suma de las diferencias en uso de memoria
     for stat in memory_diff:
         delta_memory = delta_memory + stat.size_diff
-    # de Byte -> kByte
     delta_memory = delta_memory/1024.0
     return delta_memory
 
@@ -162,8 +131,4 @@ def req4(analyzer):
 def req5(analyzer,landingP):
     return model.req5(analyzer,landingP)
 
-# Funciones para la carga de datos
 
-# Funciones de ordenamiento
-
-# Funciones de consulta sobre el catálogo
