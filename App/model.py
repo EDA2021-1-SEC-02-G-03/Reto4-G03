@@ -35,7 +35,9 @@ from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk 
 from DISClib.Utils import error as error
 from DISClib.ADT import stack as stk
+from DISClib.ADT import queue as qu
 from DISClib.Algorithms.Graphs import prim
+from DISClib.DataStructures import bst
 assert cf
 
 """
@@ -291,12 +293,13 @@ def req3(analyzer,paisA,paisB):
         return None
 
 def req4(analyzer):
-    MST=prim.PrimMST(analyzer['connections_normal'])
-    ultimo=MST['ultimo']
-    MST1={'edgeTo':MST['edgeTo'],'distTo':MST['distTo'],'marked':MST['marked'],'pq':MST['pq'],'mst':MST['mst']}
-    costo_total=prim.scan(analyzer['connections_normal'],MST1,ultimo)
-    print(costo_total)
-
+    search=prim.PrimMST(analyzer['connections_normal'])
+    distance=prim.weightMST(analyzer['connections_normal'],search)
+    mst=search['mst']
+    numberofnodes=qu.size(mst)
+    print(gr.numVertices(analyzer['connections_normal']))
+    return(distance,numberofnodes)
+    
 def country_to_capital(analyzer,country_name):
     entry=mp.get(analyzer['countries_map'],country_name)
     hash_t=me.getValue(entry)

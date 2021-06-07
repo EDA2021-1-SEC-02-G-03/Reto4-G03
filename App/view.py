@@ -129,12 +129,7 @@ while True:
    
 
     elif int(inputs[0]) == 3:
-        #TODO: Hay que hacerle algo a los landing points para que se revisen todos los landing points con la string de id.
-        #Idea: crear un mapa que relacione landing point sin id con todos los landing points con ids y realizar el algoritmo
-        # para cada uno de ellos.
 
-
-        
         landing_point1 = input('Ingrese el nombre del landing point 1: ')
         landing_point2 = input('Ingrese el nombre del landing point 2: ')
 
@@ -145,11 +140,6 @@ while True:
         elif not tupla_res[1]:
             print('El número total de clústeres presentes en la red es '+str(tupla_res[0])+' clústeres. Los dos landing points NO están en el mismo cluster.')
     elif int(inputs[0]) == 4:
-        '''
-        keys=mp.valueSet(cont['name_landing_id_hash'])
-        for i in lt.iterator(keys):
-            print(i)
-        '''
 
         print("Los landing points que sirven como punto de interconexión a más cables en la red son: ")
         keys=mp.keySet(cont['interconnections'])
@@ -169,19 +159,13 @@ while True:
             print('No se encontró camino entre los dos países ingresados.')
         else:
             print(resultado)
-
-        '''
-        keys=mp.keySet(cont['country-landing_points'])
-        for i in lt.iterator(keys):
-            print(i)
-        '''
         
         pass
 
     elif int(inputs[0]) == 6:
-        #Árbol de Recubrimiento de Costo Mínimo
-        controller.req4(cont)
-        
+        resultado=controller.req4(cont)
+        print('Hay '+str(resultado[1])+' nodos conectados a la red de expansión mínima. La distancia de la red de expansión mínima es de '+str(resultado[0])+' km.')
+
         pass
 
     elif int(inputs[0]) == 7:
