@@ -169,6 +169,31 @@ while True:
         pass
 
     elif int(inputs[0]) == 7:
+        
+        landing_point=input('Teclee el landing point que tendría el fallo: ')
+        tupla=controller.req5(cont,landing_point)
+        size=tupla[0]
+        lista=tupla[1]
+        print('Si el landing point ingresado falla, habrían '+str(size)+' países afectados. Estos serían: ')
+        impresos=[]
+        for i in lt.iterator(lista):
+            cadena=i['country']+'. '+str(i['distance'])+' km de distancia del landing point ingresado.'
+            pais=i['country']
+            if pais not in impresos:
+                print(cadena)
+                impresos.append(pais)
+
+
+
+
+
+
+        '''
+        print(gr.adjacentEdges(cont['connections'],'4181_2africa'))
+        '''
+
+
+
         pass
 
     elif int(inputs[0]) == 8:

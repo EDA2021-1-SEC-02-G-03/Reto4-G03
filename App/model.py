@@ -31,6 +31,7 @@ from DISClib.ADT import map as mp
 from DISClib.ADT.graph import gr
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import mergesort as mgs
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk 
 from DISClib.Utils import error as error
@@ -299,7 +300,37 @@ def req4(analyzer):
     numberofnodes=qu.size(mst)
     print(gr.numVertices(analyzer['connections_normal']))
     return(distance,numberofnodes)
+
+def req5(analyzer,landingP):
+    ident=cityname_to_id(analyzer,landingP)
+    list_of_vertices=get_list_of_vertices(analyzer,ident)
+    affected_countries=lt.newList('ARRAY_LIST')
+    for vertex in lt.iterator(list_of_vertices):
+        adjacents=gr.adjacentEdges(analyzer['connections'],vertex)
+        for adjacent in lt.iterator(adjacents):
+            ident1=adjacent['vertexB'].split('_')[0]
+            aux=get_landingpointname_by_id(analyzer,ident1).split(',')
+            if len(aux)>2:
+                country=aux[2][1:]
+            else:
+                country=aux[1][1:]
+            distance=adjacent['weight']
+            dato={'distance':distance,'country':country}
+            esta=False
+            for t in lt.iterator(affected_countries):
+                if t==dato:
+                    esta=True
+            if not esta:
+                lt.addLast(affected_countries,dato)
+    affected=mgs.sort(affected_countries,cmp_function_req5)
+    return (lt.size(affected),affected)
+
     
+def cmp_function_req5(dato1,dato2):
+    return(dato1['distance']>dato2['distance'])
+
+
+
 def country_to_capital(analyzer,country_name):
     entry=mp.get(analyzer['countries_map'],country_name)
     hash_t=me.getValue(entry)
